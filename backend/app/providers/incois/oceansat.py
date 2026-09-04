@@ -122,7 +122,8 @@ class INCOISOceanSatProvider:
         base = self._settings.incois_erddap_base.rstrip("/")
         sel = self.selector(lat - half_deg, lat + half_deg,
                             lon - half_deg, lon + half_deg, when, stride)
-        return f"{base}/griddap/{DATASET_ID}.json?{variable}{sel}"
+        expr = f"{variable}{sel}".replace("[", "%5B").replace("]", "%5D")
+        return f"{base}/griddap/{DATASET_ID}.json?{expr}"
 
     # ---- fetch ------------------------------------------------------------
     async def fetch_field(self, variable: str, lat: float, lon: float,

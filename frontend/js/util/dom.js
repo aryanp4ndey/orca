@@ -76,22 +76,54 @@ export function mount(el, ...children) {
 export const qs = (sel, root = document) => root.querySelector(sel);
 export const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-/** Inline icon set. Emoji is deliberate: it renders everywhere, needs no font
- *  download, and is legible to a low-literacy user. Every icon is paired with a
- *  text label in the UI - never used as the only signal. */
+/** Modern Lucide Icons mapped to getters so each usage returns a fresh DOM node */
 export const ICON = {
-  wind: '🌬', wave: '🌊', rain: '🌧', visibility: '👁', storm: '⛈', temp: '🌡',
-  current: '🧭', swell: '〰️', sun: '☀️', cloud: '☁️',
-  location: '📍', time: '🕐', boat: '⛵', fish: '🐟', warn: '⚠️', danger: '⛔',
-  ok: '✅', info: 'ℹ️', map: '🗺', route: '🧭', alert: '🚨', chart: '📈',
-  mic: '🎤', send: '➤', back: '‹', close: '✕', chevron: '⌄', search: '🔎',
-  fisher: '🎣', researcher: '🔬', disaster: '🚨', maritime: '🚢',
-  satellite: '🛰', gps: '📡', offline: '📴', settings: '⚙️', book: '📖',
+  get wind() { return h('i', { 'data-lucide': 'wind' }); },
+  get wave() { return h('i', { 'data-lucide': 'waves' }); },
+  get rain() { return h('i', { 'data-lucide': 'cloud-rain' }); },
+  get visibility() { return h('i', { 'data-lucide': 'eye' }); },
+  get storm() { return h('i', { 'data-lucide': 'cloud-lightning' }); },
+  get temp() { return h('i', { 'data-lucide': 'thermometer' }); },
+  get current() { return h('i', { 'data-lucide': 'navigation' }); },
+  get swell() { return h('i', { 'data-lucide': 'activity' }); },
+  get sun() { return h('i', { 'data-lucide': 'sun' }); },
+  get cloud() { return h('i', { 'data-lucide': 'cloud' }); },
+  get location() { return h('i', { 'data-lucide': 'map-pin' }); },
+  get time() { return h('i', { 'data-lucide': 'clock' }); },
+  get boat() { return h('i', { 'data-lucide': 'ship' }); },
+  get fish() { return h('i', { 'data-lucide': 'fish' }); },
+  get warn() { return h('i', { 'data-lucide': 'alert-triangle' }); },
+  get danger() { return h('i', { 'data-lucide': 'octagon-alert' }); },
+  get ok() { return h('i', { 'data-lucide': 'check-circle' }); },
+  get info() { return h('i', { 'data-lucide': 'info' }); },
+  get map() { return h('i', { 'data-lucide': 'map' }); },
+  get route() { return h('i', { 'data-lucide': 'route' }); },
+  get alert() { return h('i', { 'data-lucide': 'bell-ring' }); },
+  get chart() { return h('i', { 'data-lucide': 'line-chart' }); },
+  get mic() { return h('i', { 'data-lucide': 'mic' }); },
+  get send() { return h('i', { 'data-lucide': 'send' }); },
+  get back() { return h('i', { 'data-lucide': 'chevron-left' }); },
+  get close() { return h('i', { 'data-lucide': 'x' }); },
+  get chevron() { return h('i', { 'data-lucide': 'chevron-down' }); },
+  get search() { return h('i', { 'data-lucide': 'search' }); },
+  get fisher() { return h('i', { 'data-lucide': 'anchor' }); },
+  get researcher() { return h('i', { 'data-lucide': 'flask-conical' }); },
+  get disaster() { return h('i', { 'data-lucide': 'siren' }); },
+  get maritime() { return h('i', { 'data-lucide': 'ship' }); },
+  get satellite() { return h('i', { 'data-lucide': 'satellite' }); },
+  get gps() { return h('i', { 'data-lucide': 'radio-tower' }); },
+  get offline() { return h('i', { 'data-lucide': 'wifi-off' }); },
+  get settings() { return h('i', { 'data-lucide': 'settings' }); },
+  get book() { return h('i', { 'data-lucide': 'book-open' }); },
 };
 
 /** Risk level → the icon and the plain word that must always accompany colour. */
 export const RISK_ICON = {
-  LOW: '✅', MODERATE: '⚠️', HIGH: '⛔', CRITICAL: '🛑', INSUFFICIENT_DATA: '❓',
+  get LOW() { return h('i', { 'data-lucide': 'check-circle' }); },
+  get MODERATE() { return h('i', { 'data-lucide': 'alert-triangle' }); },
+  get HIGH() { return h('i', { 'data-lucide': 'shield-alert' }); },
+  get CRITICAL() { return h('i', { 'data-lucide': 'octagon-alert' }); },
+  get INSUFFICIENT_DATA() { return h('i', { 'data-lucide': 'help-circle' }); },
 };
 
 export function announce(message) {
@@ -113,4 +145,10 @@ export function toast(message, ms = 3200) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.remove(), ms);
   announce(message);
+}
+
+export function renderIcons() {
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
 }

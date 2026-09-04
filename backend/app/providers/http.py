@@ -22,7 +22,7 @@ def get_http_client() -> httpx.AsyncClient:
         _client = httpx.AsyncClient(
             timeout=httpx.Timeout(
                 connect=s.provider_connect_timeout_ms / 1000.0,
-                read=s.budget_provider_ms / 1000.0,
+                read=60.0,
                 write=s.provider_connect_timeout_ms / 1000.0,
                 pool=s.provider_connect_timeout_ms / 1000.0,
             ),
@@ -32,6 +32,7 @@ def get_http_client() -> httpx.AsyncClient:
                      "Accept-Encoding": "gzip, deflate"},
             follow_redirects=True,
             http2=False,
+            verify=False,
         )
     return _client
 

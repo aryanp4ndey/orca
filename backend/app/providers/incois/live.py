@@ -95,6 +95,7 @@ class INCOISLiveProvider(MarineDataProvider):
                 f"[({t})][({query.point.lat})][({query.point.lon})]"
                 for _ in [0])
             expr = ",".join(f"{v}{selector}" for v in wanted.values())
+            expr = expr.replace("[", "%5B").replace("]", "%5D")
             url = f"{base}/griddap/{ds_id}.json?{expr}"
             try:
                 resp = await client.get(url)

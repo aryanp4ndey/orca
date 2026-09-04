@@ -6,7 +6,7 @@
  * connection is.
  */
 
-import { h, ICON, mount, toast, announce } from './util/dom.js';
+import { h, ICON, mount, toast, announce, renderIcons } from './util/dom.js';
 import { dateTimeIST } from './util/format.js';
 import { t, setLang, LANGUAGES } from './i18n.js';
 import { state, mode, update, MODES } from './state.js';
@@ -155,6 +155,9 @@ function render() {
       h('main', { class: 'main', id: 'main', tabindex: '-1' },
         statusBar(),
         screen())));
+  
+  // Render Lucide SVG icons if available
+  requestAnimationFrame(renderIcons);
 }
 
 // ------------------------------------------------------------- sheets ------
@@ -319,6 +322,16 @@ async function start() {
   document.documentElement.dataset.lowbw = state.lowBandwidth ? 'true' : 'false';
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.dataset.reducedMotion = 'true';
+  }
+
+  // Initialize Lenis for smooth scrolling if not disabled
+  if (!state.lowBandwidth && !document.documentElement.dataset.reducedMotion && window.Lenis) {
+    const lenis = new window.Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
   }
 
   onNetChange(() => {

@@ -1,0 +1,17 @@
+{
+  "incois_valueadded_products_datasets": {
+    "kind": "griddap",
+    "title": "INCOIS Value Added Products",
+    "available_variables": [
+      "D20",
+      "D26",
+      "DYN_HT",
+      "GEO_U",
+      "GEO_V",
+      "HTCNT",
+      "ILD",
+      "MLD"
+    ],
+    "variables": {}
+  }
+}

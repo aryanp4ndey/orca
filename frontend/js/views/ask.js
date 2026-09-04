@@ -18,30 +18,30 @@ import { answerCard, plainAnswer } from './answer.js';
 import { progressPanel } from './progress.js';
 
 const QUICK = {
-  fishing: { icon: '🎣', key: 'quickFishing',
+  fishing: { icon: 'fisher', key: 'quickFishing',
              query: { en: 'Is it safe to go fishing from {place} tomorrow at 7 AM?',
                       hi: 'क्या कल सुबह 7 बजे {place} से मछली पकड़ने जाना सुरक्षित है?' } },
-  sea:     { icon: '🌊', key: 'quickSea',
+  sea:     { icon: 'wave', key: 'quickSea',
              query: { en: 'What is the sea condition near {place}?',
                       hi: '{place} के पास समुद्र की स्थिति क्या है?' } },
-  warnings:{ icon: '⚠️', key: 'quickWarnings',
+  warnings:{ icon: 'warn', key: 'quickWarnings',
              query: { en: 'Are there any cyclone or lightning warnings near {place}?',
                       hi: 'क्या {place} के पास चक्रवात या बिजली की चेतावनी है?' } },
-  pfz:     { icon: '🐟', key: 'quickPFZ',
+  pfz:     { icon: 'fish', key: 'quickPFZ',
              query: { en: 'Where is the nearest Potential Fishing Zone today?',
                       hi: 'आज निकटतम मछली क्षेत्र कहाँ है?' } },
-  avoid:   { icon: '⛔', key: 'quickWarnings',
+  avoid:   { icon: 'danger', key: 'quickWarnings',
              query: { en: 'What areas should I avoid near {place}?',
                       hi: '{place} के पास किन क्षेत्रों से बचें?' } },
-  analytical: { icon: '📈', key: 'quickSea',
+  analytical: { icon: 'chart', key: 'quickSea',
              query: { en: 'Why is fishing potential lower here between 5 PM and 10 PM?',
                       hi: 'यहाँ शाम 5 से 10 बजे मछली की संभावना कम क्यों है?' } },
-  route:   { icon: '🧭', key: 'route',
+  route:   { icon: 'route', key: 'route',
              query: { en: 'Show the safest route from Kochi to Mangaluru',
                       hi: 'कोच्चि से मंगलुरु तक सबसे सुरक्षित मार्ग दिखाएँ' } },
-  compare: { icon: '⚖️', key: 'compare', view: 'compare' },
-  evidence:{ icon: '📖', key: 'viewEvidence', view: 'evidence' },
-  map:     { icon: '🗺', key: 'map', view: 'map' },
+  compare: { icon: 'chart', key: 'compare', view: 'compare' },
+  evidence:{ icon: 'book', key: 'viewEvidence', view: 'evidence' },
+  map:     { icon: 'map', key: 'map', view: 'map' },
 };
 
 export function askView(app) {
@@ -249,7 +249,7 @@ export function askView(app) {
           ask(template.replace('{place}', placeName));
         },
       },
-        h('span', { class: 'quick__icon', 'aria-hidden': 'true' }, item.icon),
+        h('span', { class: 'quick__icon', 'aria-hidden': 'true' }, ICON[item.icon]),
         h('span', { class: 'quick__label' }, label),
         h('span', { class: 'quick__hint' },
           item.view ? '' : (state.location ? t('usingLocation') : placeName)));
@@ -296,6 +296,20 @@ export function askView(app) {
       container.appendChild(homeBlock());
     }
     container.appendChild(askbox);
+    
+    // Trigger GSAP entrance animations
+    requestAnimationFrame(() => {
+      if (window.gsap && !state.lowBandwidth) {
+        if (!state.turns.length) {
+          window.gsap.fromTo(container.querySelectorAll('.hero, .section-title, .quick, .chip'), 
+            { y: 30, opacity: 0, scale: 0.95, filter: 'blur(8px)' }, 
+            { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.8, stagger: 0.08, ease: 'expo.out' });
+        }
+        window.gsap.fromTo(askbox, 
+          { y: 30, opacity: 0, scale: 0.98, filter: 'blur(4px)' }, 
+          { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.8, delay: state.turns.length ? 0 : 0.4, ease: 'expo.out' });
+      }
+    });
   }
 
   render();
