@@ -62,12 +62,24 @@ export function askView(app) {
     : null;
 
   const sendButton = h('button', {
-    class: 'btn btn--primary', type: 'button', id: 'ask-send',
+    class: 'askbox__send', type: 'button', id: 'ask-send',
     'aria-label': t('send'), onclick: () => submit(),
   }, h('span', { 'aria-hidden': 'true' }, ICON.send));
 
+  const askboxChips = h('div', { class: 'askbox__chips' },
+    h('button', { class: 'chip chip--askbox', type: 'button', onclick: () => app.go('map') },
+      h('span', { 'aria-hidden': 'true' }, ICON.map), ' Map'),
+    h('button', { class: 'chip chip--askbox', type: 'button', onclick: () => app.go('alerts') },
+      h('span', { 'aria-hidden': 'true' }, ICON.alert), ' Warnings'),
+    h('button', { class: 'chip chip--askbox', type: 'button', onclick: () => { resetConversation(); container.refresh(); } },
+      h('span', { 'aria-hidden': 'true' }, ICON.close), ' Clear chat')
+  );
+
   const askbox = h('div', { class: 'askbox' },
-    h('div', { class: 'askbox__row' }, input, micButton, sendButton));
+    h('div', { class: 'askbox__row' }, input, micButton, sendButton),
+    h('div', { class: 'askbox__divider' }),
+    askboxChips
+  );
 
   // ---- rendering ---------------------------------------------------------
   function renderThread() {
@@ -98,16 +110,17 @@ export function askView(app) {
         })
       : plainAnswer(response));
 
+    wrapper.appendChild(h('div', { class: 'msg__meta' },
+      `${response.answer_language?.toUpperCase() || ''} · `
+      + `${Math.round(response.latency?.total_ms || 0)} ms · `
+      + dateTimeIST(response.generated_at)));
+
     if (response.follow_up_suggestions?.length && turn === state.turns[state.turns.length - 1]) {
       wrapper.appendChild(h('div', { class: 'chips', style: { marginTop: '12px' } },
         ...response.follow_up_suggestions.slice(0, 3).map((suggestion) =>
           h('button', { class: 'chip', type: 'button',
                         onclick: () => ask(suggestion) }, suggestion))));
     }
-    wrapper.appendChild(h('div', { class: 'msg__meta' },
-      `${response.answer_language?.toUpperCase() || ''} · `
-      + `${Math.round(response.latency?.total_ms || 0)} ms · `
-      + dateTimeIST(response.generated_at)));
     return wrapper;
   }
 

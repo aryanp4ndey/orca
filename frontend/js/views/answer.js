@@ -162,7 +162,25 @@ export function answerCard(response, { onMap, onCompare, cached = null } = {}) {
       h('div', { class: 'risk__level' }, LEVEL_WORD[level] || level),
       h('div', { class: 'risk__verdict' },
         (VERDICT[level] || {})[lang] || (VERDICT[level] || {}).en || ''),
-      contextRow(response))));
+      contextRow(response)),
+    h('button', {
+      class: 'iconbtn', type: 'button', 'aria-label': 'Read aloud', title: 'Read aloud',
+      onclick: () => {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        
+        let textToRead = '';
+        if (response.data && response.data.answer) {
+          textToRead = response.data.answer;
+        } else {
+          textToRead = lines.join('. ');
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = lang === 'hi' ? 'hi-IN' : 'en-IN';
+        window.speechSynthesis.speak(utterance);
+      }
+    }, ICON.volume)));
 
   if (cached) {
     card.appendChild(h('div', { class: 'warnstrip warnstrip--muted' },
@@ -179,10 +197,7 @@ export function answerCard(response, { onMap, onCompare, cached = null } = {}) {
   // Level 1 disclosure: why.
   card.appendChild(disclose(t('why'), ICON.info,
     h('div', {},
-      ...lines.slice(1).map((line) => h('p', {}, line)),
-      risk ? h('p', { class: 'tiny muted' },
-        `Score ${num(risk.risk_score)}/100 · confidence ${Math.round((risk.confidence || 0) * 100)}%`
-        + ` · ruleset ${risk.ruleset_id}@${risk.ruleset_version}`) : null),
+      ...lines.slice(1).map((line) => h('p', {}, line))),
     { open: detail !== 'simple' }));
 
   // Level 2 disclosure: the evidence chain.

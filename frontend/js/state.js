@@ -87,29 +87,29 @@ export function resetConversation() {
   update({ turns: [], sessionId: null });
 }
 
+import { ICON } from './util/dom.js';
+
 export const MODES = {
   fisher: {
-    id: 'fisher', icon: '🎣',
+    id: 'fisher', get icon() { return ICON.boat; },
     activity: 'fishing_small_boat', vessel: 'small_motorised',
-    // What this mode shows by default. One intelligence layer, different
-    // decision contexts - not four products.
     detail: 'simple', showFactors: 4, defaultView: 'ask',
     quick: ['fishing', 'sea', 'warnings', 'pfz'],
   },
   researcher: {
-    id: 'researcher', icon: '🔬',
+    id: 'researcher', get icon() { return ICON.search; },
     activity: 'research', vessel: 'mechanised',
     detail: 'full', showFactors: 8, defaultView: 'ask',
     quick: ['sea', 'analytical', 'compare', 'evidence'],
   },
   disaster: {
-    id: 'disaster', icon: '🚨',
+    id: 'disaster', get icon() { return ICON.disaster; },
     activity: 'patrol', vessel: 'mechanised',
     detail: 'operational', showFactors: 6, defaultView: 'alerts',
     quick: ['warnings', 'avoid', 'sea', 'map'],
   },
   maritime: {
-    id: 'maritime', icon: '🚢',
+    id: 'maritime', get icon() { return ICON.ship || ICON.boat; },
     activity: 'cargo_transit', vessel: 'large',
     detail: 'operational', showFactors: 6, defaultView: 'ask',
     quick: ['route', 'sea', 'warnings', 'avoid'],

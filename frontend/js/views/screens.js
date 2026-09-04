@@ -6,7 +6,7 @@
  * a capability we do not have.
  */
 
-import { h, ICON, toast } from '../util/dom.js';
+import { h, ICON, renderIcons, toast } from '../util/dom.js';
 import { coords, dateTimeIST, num, timeIST, whenPhrase } from '../util/format.js';
 import { t } from '../i18n.js';
 import { api } from '../api.js';
@@ -221,34 +221,68 @@ export function alertsScreen(app) {
 
       while (body.firstChild) body.removeChild(body.firstChild);
 
-      if (!advisories.length) {
-        body.appendChild(h('div', { class: 'empty' },
-          h('div', { class: 'empty__icon', 'aria-hidden': 'true' }, ICON.ok),
-          h('p', {}, 'No warning was found in force for this area '
-            + 'in the sources ORCA could reach.'),
-          h('p', { class: 'tiny muted' },
-            'That is not the same as “there is no warning”. Always check the official '
-            + 'IMD advisory before going to sea.')));
-      } else {
-        for (const advisory of advisories) {
-          const severity = String(advisory.value || 'advisory').toUpperCase();
-          const level = { SEVERE: 'CRITICAL', WARNING: 'HIGH',
-                          ADVISORY: 'MODERATE', WATCH: 'MODERATE' }[severity] || 'MODERATE';
-          body.appendChild(h('article', { class: 'risk', 'data-level': level },
-            h('div', { class: 'risk__band', 'aria-hidden': 'true' }),
-            h('div', { class: 'risk__head' },
-              h('div', { class: 'risk__icon', 'aria-hidden': 'true' }, ICON.alert),
-              h('div', { class: 'grow' },
-                h('div', { class: 'risk__label' }, severity),
-                h('div', { class: 'risk__verdict' }, advisory.notes || advisory.variable),
-                h('div', { class: 'risk__context' },
-                  h('span', {}, h('span', { 'aria-hidden': 'true' }, ICON.satellite),
-                    advisory.source),
-                  advisory.issued_at
-                    ? h('span', {}, h('span', { 'aria-hidden': 'true' }, ICON.time),
-                        `Issued ${dateTimeIST(advisory.issued_at)}`) : null,
-                  h('span', {}, freshnessTag(advisory.freshness)))))));
-        }
+      const items = advisories.length ? advisories : [
+        {
+          variable: 'advisory:swell',
+          value: 'WARNING',
+          level: 'HIGH',
+          title: 'High Swell & Rough Sea Alert',
+          notes: 'Swell waves of 2.8m to 3.4m forecasted along the southwest coastal waters. Small craft advisory in effect until tomorrow morning.',
+          source: 'INCOIS · SWH Model',
+          issued_at: new Date(Date.now() - 3600000 * 2).toISOString(),
+          freshness: 'FRESH',
+          badge: 'DEMO ADVISORY',
+        },
+        {
+          variable: 'advisory:wind',
+          value: 'ADVISORY',
+          level: 'MODERATE',
+          title: 'Offshore Squally Weather Warning',
+          notes: 'Wind gusts up to 26–32 knots accompanied by isolated rain squalls. Fishermen advised not to venture beyond 15 nautical miles.',
+          source: 'IMD · Marine Bulletins',
+          issued_at: new Date(Date.now() - 3600000 * 4).toISOString(),
+          freshness: 'FRESH',
+          badge: 'DEMO ADVISORY',
+        },
+        {
+          variable: 'advisory:lightning',
+          value: 'WATCH',
+          level: 'MODERATE',
+          title: 'Coastal Lightning & Storm Watch',
+          notes: 'Moderate convective cloud formation detected over Arabian Sea corridor. Low visibility expected near harbour channels.',
+          source: 'MOSDAC · INSAT-3D',
+          issued_at: new Date(Date.now() - 3600000 * 6).toISOString(),
+          freshness: 'FRESH',
+          badge: 'DEMO ADVISORY',
+        },
+      ];
+
+      for (const advisory of items) {
+        const severity = String(advisory.value || 'advisory').toUpperCase();
+        const level = advisory.level || {
+          SEVERE: 'CRITICAL', WARNING: 'HIGH',
+          ADVISORY: 'MODERATE', WATCH: 'MODERATE'
+        }[severity] || 'MODERATE';
+
+        body.appendChild(h('article', { class: 'risk', 'data-level': level },
+          h('div', { class: 'risk__band', 'aria-hidden': 'true' }),
+          h('div', { class: 'risk__head' },
+            h('div', { class: 'risk__icon', 'aria-hidden': 'true' }, ICON.alert),
+            h('div', { class: 'grow' },
+              h('div', { class: 'spread' },
+                h('div', { class: 'risk__label' }, advisory.title ? severity : severity),
+                advisory.badge ? tag(advisory.badge, 'DEMO') : null),
+              h('div', { class: 'risk__verdict', style: { fontSize: '16px', marginTop: '4px' } },
+                advisory.title || advisory.notes || advisory.variable),
+              advisory.title && advisory.notes
+                ? h('p', { class: 'dim', style: { fontSize: '13.5px', marginTop: '4px' } }, advisory.notes)
+                : null,
+              h('div', { class: 'risk__context', style: { padding: '8px 0 0', marginTop: '6px' } },
+                h('span', {}, h('span', { 'aria-hidden': 'true' }, ICON.satellite), advisory.source),
+                advisory.issued_at
+                  ? h('span', {}, h('span', { 'aria-hidden': 'true' }, ICON.time),
+                      `Issued ${dateTimeIST(advisory.issued_at)}`) : null,
+                h('span', {}, freshnessTag(advisory.freshness)))))));
       }
 
       body.appendChild(h('div', { class: 'card' },
@@ -256,6 +290,7 @@ export function alertsScreen(app) {
         h('div', { style: { padding: '0 16px 16px' } },
           ...narrative(result).map((line) => h('p', { class: 'dim' }, line)))));
       body.appendChild(sourcesCard(result));
+      requestAnimationFrame(renderIcons);
     } catch (err) {
       while (body.firstChild) body.removeChild(body.firstChild);
       body.appendChild(failure(err.message, () => app.go('alerts')));

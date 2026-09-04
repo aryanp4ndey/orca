@@ -101,6 +101,7 @@ export const ICON = {
   get alert() { return h('i', { 'data-lucide': 'bell-ring' }); },
   get chart() { return h('i', { 'data-lucide': 'line-chart' }); },
   get mic() { return h('i', { 'data-lucide': 'mic' }); },
+  get volume() { return h('i', { 'data-lucide': 'volume-2' }); },
   get send() { return h('i', { 'data-lucide': 'send' }); },
   get back() { return h('i', { 'data-lucide': 'chevron-left' }); },
   get close() { return h('i', { 'data-lucide': 'x' }); },

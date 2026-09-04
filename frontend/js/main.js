@@ -40,48 +40,43 @@ const app = {
 };
 
 // ---------------------------------------------------------------- shell ----
-function statusBar() {
-  const netLabel = { online: t('online'), degraded: t('degraded'), offline: t('offline') };
-  const bits = [
-    h('span', { class: `status status--${NET.status}`, id: 'net-status' },
-      h('span', { class: 'status__dot', 'aria-hidden': 'true' }),
-      h('span', {}, netLabel[NET.status])),
-    h('button', {
-      class: 'status', type: 'button', id: 'loc-status',
-      onclick: () => openLocationSheet(),
-      'aria-label': state.location ? `Location: ${state.location.label}` : t('useLocation'),
-    },
-      h('span', { 'aria-hidden': 'true' }, ICON.location),
-      h('span', {}, state.location ? state.location.label : t('useLocation'))),
-    h('button', { class: 'status', type: 'button', id: 'mode-status',
-                  onclick: () => openModeSheet() },
-      h('span', { 'aria-hidden': 'true' }, mode().icon),
-      h('span', {}, t(`modes.${state.mode}.name`))),
-  ];
-  if (app.health?.demo_mode) {
-    bits.push(h('span', { class: 'status status--demo', id: 'demo-status',
-                          title: t('demoNote') },
-      h('span', { 'aria-hidden': 'true' }, ICON.info),
-      h('span', {}, t('demoData'))));
-  }
-  return h('div', { class: 'statusbar' }, ...bits);
-}
+// StatusBar has been moved to the topBar for a cleaner, professional layout
 
 function topBar() {
+  const netLabel = { online: t('online'), degraded: t('degraded'), offline: t('offline') };
+  const rightItems = [];
+  
+  if (app.health?.demo_mode) {
+    rightItems.push(h('span', { class: 'status status--demo', id: 'demo-status', title: t('demoNote') },
+      h('span', { 'aria-hidden': 'true' }, ICON.info), h('span', { class: 'hide-on-mobile' }, t('demoData'))));
+  }
+  
+  rightItems.push(
+    h('button', { class: 'status', type: 'button', id: 'loc-status', onclick: () => openLocationSheet(),
+                  'aria-label': state.location ? `Location: ${state.location.label}` : t('useLocation') },
+      h('span', { 'aria-hidden': 'true' }, ICON.location),
+      h('span', { class: 'hide-on-mobile' }, state.location ? state.location.label : t('useLocation'))),
+    h('button', { class: 'status', type: 'button', id: 'mode-status', onclick: () => openModeSheet(),
+                  'aria-label': t(`modes.${state.mode}.name`) },
+      h('span', { 'aria-hidden': 'true' }, mode().icon),
+      h('span', { class: 'hide-on-mobile' }, t(`modes.${state.mode}.name`))),
+    h('span', { class: `status status--${NET.status}`, id: 'net-status' },
+      h('span', { class: 'status__dot', 'aria-hidden': 'true' }),
+      h('span', { class: 'hide-on-mobile' }, netLabel[NET.status])),
+    h('button', { class: 'iconbtn', type: 'button', id: 'lang-btn',
+                  'aria-label': t('language'), onclick: () => openLanguageSheet() },
+      state.lang.toUpperCase())
+  );
+
   return h('header', { class: 'topbar' },
     h('div', { class: 'brand' },
-      h('svg', { viewBox: '0 0 48 48', width: '26', height: '26', 'aria-hidden': 'true' },
-        h('path', { d: 'M6 30c4.5 0 4.5-4.5 9-4.5s4.5 4.5 9 4.5 4.5-4.5 9-4.5 4.5 4.5 6 4.5',
-                    stroke: 'currentColor', 'stroke-width': '3', fill: 'none',
-                    'stroke-linecap': 'round' }),
-        h('circle', { cx: '24', cy: '16', r: '4.5', fill: 'currentColor' })),
-      h('div', {},
+      h('img', { src: '/app/Assests/orca-logo.png', width: '38', height: '38', 'aria-hidden': 'true', alt: '', style: 'margin-right: 4px;' }),
+      h('div', { class: 'hide-on-mobile-strict' },
         h('div', {}, 'ORCA'),
         h('div', { class: 'brand__sub' }, 'Marine Intelligence'))),
     h('div', { class: 'topbar__spacer' }),
-    h('button', { class: 'iconbtn', type: 'button', id: 'lang-btn',
-                  'aria-label': t('language'), onclick: () => openLanguageSheet() },
-      state.lang.toUpperCase()));
+    ...rightItems
+  );
 }
 
 const NAV = [
@@ -153,7 +148,6 @@ function render() {
     navBar(),
     h('div', { class: 'shell' },
       h('main', { class: 'main', id: 'main', tabindex: '-1' },
-        statusBar(),
         screen())));
   
   // Render Lucide SVG icons if available
@@ -171,11 +165,13 @@ function sheet(title, body) {
   panel.appendChild(h('div', { class: 'sheet__grab', 'aria-hidden': 'true' }));
   panel.appendChild(h('div', { class: 'sheet__head' },
     h('div', { class: 'sheet__title' }, title),
+    h('div', { class: 'grow' }),
     h('button', { class: 'iconbtn iconbtn--sm', type: 'button', 'aria-label': 'Close',
                   onclick: close }, ICON.close)));
   panel.appendChild(h('div', { class: 'sheet__body' }, body(close)));
   document.body.appendChild(overlay);
   document.body.style.overflow = 'hidden';
+  requestAnimationFrame(renderIcons);
   const focusable = panel.querySelector('button, input, [tabindex]');
   focusable?.focus();
   document.addEventListener('keydown', function esc(e) {
@@ -185,7 +181,13 @@ function sheet(title, body) {
 }
 
 function openModeSheet() {
-  sheet(t('mode'), (close) => modeChooser(() => { close(); render(); }));
+  sheet(t('mode'), (close) => h('div', { class: 'stack' },
+    modeChooser(), // No auto-close callback
+    h('button', {
+      class: 'btn btn--primary btn--block', type: 'button',
+      onclick: () => { close(); render(); }
+    }, 'OK')
+  ));
 }
 
 function openLanguageSheet() {

@@ -16,22 +16,32 @@ import { CONFIG, setApiBase } from '../config.js';
 import { clearAnswers } from '../services/cache.js';
 
 export function modeChooser(onPick) {
-  return h('div', { class: 'radioset', role: 'radiogroup', 'aria-label': t('mode') },
-    ...Object.values(MODES).map((m) =>
-      h('button', {
-        class: 'radio', type: 'button', role: 'radio', id: `mode-${m.id}`,
-        'aria-checked': String(state.mode === m.id),
-        'data-active': state.mode === m.id ? 'true' : null,
-        onclick: () => {
-          update({ mode: m.id });
-          document.documentElement.dataset.mode = m.id;
-          onPick?.(m.id);
-        },
+  const container = h('div', { class: 'radioset', role: 'radiogroup', 'aria-label': t('mode') });
+  const buttons = Object.values(MODES).map((m) => {
+    const btn = h('button', {
+      class: 'radio', type: 'button', role: 'radio', id: `mode-${m.id}`,
+      'aria-checked': String(state.mode === m.id),
+      'data-active': state.mode === m.id ? 'true' : null,
+      onclick: () => {
+        update({ mode: m.id });
+        document.documentElement.dataset.mode = m.id;
+        buttons.forEach(b => {
+          const isSelected = state.mode === b.id.replace('mode-', '');
+          b.setAttribute('aria-checked', String(isSelected));
+          if (isSelected) b.setAttribute('data-active', 'true');
+          else b.removeAttribute('data-active');
+        });
+        onPick?.(m.id);
       },
-        h('span', { class: 'radio__icon', 'aria-hidden': 'true' }, m.icon),
-        h('span', { class: 'grow' },
-          h('span', { class: 'radio__name' }, t(`modes.${m.id}.name`)),
-          h('span', { class: 'radio__desc' }, t(`modes.${m.id}.desc`))))));
+    },
+      h('span', { class: 'radio__icon', 'aria-hidden': 'true' }, m.icon),
+      h('span', { class: 'grow' },
+        h('span', { class: 'radio__name' }, t(`modes.${m.id}.name`)),
+        h('span', { class: 'radio__desc' }, t(`modes.${m.id}.desc`))));
+    return btn;
+  });
+  buttons.forEach(b => container.appendChild(b));
+  return container;
 }
 
 function toggle(id, label, hint, checked, onChange) {
