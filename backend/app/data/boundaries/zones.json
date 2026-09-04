@@ -1,0 +1,51 @@
+{
+  "dataset_id": "orca-illustrative-zones-v0",
+  "version": "0.1.0",
+  "authoritative": false,
+  "description": "Illustrative operational zones used to exercise ORCA's geofencing, alerting and route-avoidance logic. Geometries are approximate rectangles chosen for demonstration. They are NOT official notified areas. Each entry names the authoritative dataset that should replace it.",
+  "layers": [
+    {
+      "layer_id": "imd_sea_areas",
+      "name": "IMD marine bulletin sea areas (approximate)",
+      "category": "imd_sea_area",
+      "source": "Approximated from the named sea areas used in IMD marine/coastal bulletins",
+      "source_url": "https://mausam.imd.gov.in/",
+      "authoritative": false,
+      "notes": "Bounding boxes only. Replace with IMD's published sea-area definitions when obtained.",
+      "zones": [
+        {"zone_id":"sea_se_arabian","name":"Southeast Arabian Sea","bbox":[5.0,68.0,15.0,76.5]},
+        {"zone_id":"sea_e_central_arabian","name":"East Central Arabian Sea","bbox":[15.0,66.0,21.0,74.0]},
+        {"zone_id":"sea_ne_arabian","name":"Northeast Arabian Sea","bbox":[21.0,64.0,25.5,73.0]},
+        {"zone_id":"sea_sw_bengal","name":"Southwest Bay of Bengal","bbox":[5.0,78.0,15.0,88.0]},
+        {"zone_id":"sea_w_central_bengal","name":"West Central Bay of Bengal","bbox":[15.0,80.0,19.5,90.0]},
+        {"zone_id":"sea_nw_bengal","name":"Northwest Bay of Bengal","bbox":[19.5,84.0,23.0,91.0]},
+        {"zone_id":"sea_andaman","name":"Andaman Sea","bbox":[6.0,91.0,16.0,98.0]},
+        {"zone_id":"sea_lakshadweep","name":"Lakshadweep area","bbox":[8.0,71.0,13.0,74.5]}
+      ]
+    },
+    {
+      "layer_id": "demo_restricted_areas",
+      "name": "Demonstration restricted / caution areas",
+      "category": "restricted",
+      "source": "ORCA demonstration fixture",
+      "authoritative": false,
+      "notes": "ILLUSTRATIVE ONLY. Replace with notified restricted areas, defence practice areas and port limits from the relevant authority before any operational use.",
+      "zones": [
+        {"zone_id":"demo_kochi_port_approach","name":"Kochi port approach channel (illustrative)","bbox":[9.90,76.10,10.00,76.24],"attributes":{"rule":"keep clear of commercial traffic separation","authority":"illustrative"}},
+        {"zone_id":"demo_chennai_anchorage","name":"Chennai outer anchorage (illustrative)","bbox":[13.02,80.32,13.14,80.46],"attributes":{"rule":"anchored vessels; avoid drifting nets","authority":"illustrative"}},
+        {"zone_id":"demo_mumbai_offshore_field","name":"Mumbai offshore installation zone (illustrative)","bbox":[19.10,71.30,19.80,72.10],"attributes":{"rule":"500 m safety zone around installations","authority":"illustrative"}}
+      ]
+    },
+    {
+      "layer_id": "demo_seasonal_closure",
+      "name": "Demonstration seasonal fishing closure",
+      "category": "fishing_ban",
+      "source": "ORCA demonstration fixture",
+      "authoritative": false,
+      "notes": "ILLUSTRATIVE ONLY. Actual monsoon fishing-ban periods and areas are notified by individual coastal states and by the Government of India for the EEZ.",
+      "zones": [
+        {"zone_id":"demo_kerala_monsoon_closure","name":"Kerala coast seasonal closure (illustrative)","bbox":[8.0,74.8,12.8,76.6],"attributes":{"typical_period":"varies by state notification","authority":"illustrative"}}
+      ]
+    }
+  ]
+}

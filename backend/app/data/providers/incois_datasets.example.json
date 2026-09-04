@@ -1,0 +1,10 @@
+{
+  "_comment": "EXAMPLE SHAPE ONLY. Run `python -m app.tools.discover_incois` to list real dataset ids and their variable names, then copy this to incois_datasets.json with real values.",
+  "REPLACE_WITH_REAL_ERDDAP_DATASET_ID": {
+    "kind": "griddap",
+    "variables": {
+      "wave_height_significant": "REPLACE_WITH_REAL_VARIABLE_NAME",
+      "sea_surface_temperature": "REPLACE_WITH_REAL_VARIABLE_NAME"
+    }
+  }
+}

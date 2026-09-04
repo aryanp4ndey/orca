@@ -1,0 +1,20 @@
+{
+  "dataset_id": "orca-coastal-baseline-in",
+  "version": "0.1.0",
+  "authoritative": false,
+  "description": "A deliberately coarse baseline of the Indian coast, expressed as ordered sequences of gazetteer place ids. ORCA interpolates between them to estimate distance-to-coast and to derive maritime-zone BANDS. It is an approximation built from public settlement coordinates, accurate to roughly +/- 10 km. It is NOT the territorial sea baseline notified under the Maritime Zones Act, NOT a survey product, and must never be used for navigation or for any legal determination of maritime limits.",
+  "replace_with": "Survey of India / NHO coastline or Marine Regions (marineregions.org) EEZ polygons - see docs/providers.md for the ingestion path.",
+  "segments": [
+    {"id":"west_coast","name":"West coast (Gujarat to Kanyakumari)","place_ids":[
+      "jakhau","mandvi","kandla","okha","dwarka","porbandar","mangrol","veraval","diu","daman",
+      "dahanu","satpati","mumbai","alibag","harnai","ratnagiri","devgad","malvan","vengurla",
+      "panaji","karwar","honnavar","bhatkal","malpe","mangaluru","kasaragod","kannur","kozhikode",
+      "beypore","ponnani","munambam","kochi","alappuzha","kollam","vizhinjam","kanyakumari"]},
+    {"id":"east_coast","name":"East coast (Kanyakumari to Sunderbans)","place_ids":[
+      "kanyakumari","thoothukudi","rameswaram","nagapattinam","karaikal","cuddalore","puducherry",
+      "mahabalipuram","chennai","ennore","krishnapatnam","machilipatnam","kakinada","visakhapatnam",
+      "kalingapatnam","gopalpur","puri","paradip","dhamra","chandipur","digha","haldia","sagar_island","namkhana"]},
+    {"id":"andaman_nicobar","name":"Andaman and Nicobar","place_ids":["port_blair","car_nicobar"]},
+    {"id":"lakshadweep","name":"Lakshadweep","place_ids":["agatti","kavaratti","minicoy"]}
+  ]
+}

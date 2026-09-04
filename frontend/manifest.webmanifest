@@ -1,0 +1,27 @@
+{
+  "name": "ORCA — Marine Intelligence",
+  "short_name": "ORCA",
+  "description": "Ask about the sea. Marine safety, sea state, fishing zones and warnings for the Indian coast.",
+  "start_url": "/app/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07111c",
+  "theme_color": "#07111c",
+  "categories": ["weather", "navigation", "utilities"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%2307111c'/%3E%3Cpath d='M30 120c19 0 19-18 38-18s19 18 38 18 19-18 38-18 19 18 23 18' stroke='%232ee6d6' stroke-width='13' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='96' cy='66' r='19' fill='%232ee6d6'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%2307111c'/%3E%3Cpath d='M80 320c50 0 50-48 100-48s50 48 100 48 50-48 100-48 50 48 62 48' stroke='%232ee6d6' stroke-width='34' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='176' r='50' fill='%232ee6d6'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

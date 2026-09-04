@@ -1,0 +1,172 @@
+# ORCA risk ruleset
+# =================
+# This file is the entire risk policy. It is data, not code, so it can be
+# reviewed by someone who does not read Python, tuned without a redeploy, and
+# diffed when it changes.
+#
+# HONESTY NOTE (read before using operationally):
+# These thresholds are *indicative*. They are informed by the shape of common
+# small-craft advisory practice and by the Beaufort and Douglas scales, but they
+# are NOT a reproduction of any authority's official criteria, and ORCA is not a
+# certified navigation or maritime-safety system. An operational deployment must
+# replace these numbers with thresholds agreed with the relevant authority
+# (IMD / INCOIS / state fisheries department / Coast Guard) for each activity
+# and vessel class.
+#
+# Semantics:
+#   band thresholds are the value at which that band STARTS (comparator applies)
+#   weight        how much the factor contributes to the 0-100 score
+#   required      the assessment is withheld if this variable is missing/stale
+
+ruleset_id: orca-marine-v1
+version: "1.0.0"
+scale:
+  levels: [LOW, MODERATE, HIGH, CRITICAL]
+
+# Multiplies every threshold. A canoe capsizes in conditions a trawler ignores.
+vessel_factor:
+  none: 1.0
+  canoe: 0.75
+  small_motorised: 1.0
+  mechanised: 1.35
+  large: 1.85
+
+activities:
+
+  fishing_small_boat:
+    label: "Small-boat fishing (country craft / outboard)"
+    rules:
+      - id: wave_height
+        variable: wave_height_significant
+        label: "Significant wave height"
+        comparator: ">="
+        unit: m
+        bands: {MODERATE: 1.5, HIGH: 2.5, CRITICAL: 3.5}
+        weight: 30
+        required: true
+      - id: wind_speed
+        variable: wind_speed_10m
+        label: "Wind speed"
+        comparator: ">="
+        unit: km/h
+        bands: {MODERATE: 20, HIGH: 34, CRITICAL: 50}
+        weight: 25
+        required: true
+      - id: wind_gust
+        variable: wind_gust_10m
+        label: "Wind gusts"
+        comparator: ">="
+        unit: km/h
+        bands: {MODERATE: 30, HIGH: 45, CRITICAL: 62}
+        weight: 10
+      - id: swell
+        variable: swell_height
+        label: "Swell height"
+        comparator: ">="
+        unit: m
+        bands: {MODERATE: 1.5, HIGH: 2.2, CRITICAL: 3.0}
+        weight: 12
+      - id: visibility
+        variable: visibility
+        label: "Visibility"
+        comparator: "<="
+        unit: m
+        bands: {MODERATE: 5000, HIGH: 2000, CRITICAL: 1000}
+        weight: 10
+      - id: thunderstorm
+        variable: thunderstorm_probability
+        label: "Thunderstorm / lightning probability"
+        comparator: ">="
+        unit: "%"
+        bands: {MODERATE: 40, HIGH: 60, CRITICAL: 80}
+        weight: 8
+      - id: rainfall
+        variable: precipitation
+        label: "Rainfall"
+        comparator: ">="
+        unit: mm
+        bands: {MODERATE: 7, HIGH: 15, CRITICAL: 30}
+        weight: 5
+
+  fishing_mechanised:
+    label: "Mechanised fishing vessel"
+    inherit: fishing_small_boat
+    overrides:
+      wave_height: {MODERATE: 2.5, HIGH: 3.5, CRITICAL: 5.0}
+      wind_speed: {MODERATE: 34, HIGH: 50, CRITICAL: 62}
+      wind_gust: {MODERATE: 45, HIGH: 62, CRITICAL: 88}
+      swell: {MODERATE: 2.5, HIGH: 3.5, CRITICAL: 4.5}
+
+  swimming:
+    label: "Swimming / bathing"
+    inherit: fishing_small_boat
+    overrides:
+      wave_height: {MODERATE: 0.8, HIGH: 1.2, CRITICAL: 1.8}
+      wind_speed: {MODERATE: 18, HIGH: 28, CRITICAL: 40}
+      swell: {MODERATE: 0.8, HIGH: 1.2, CRITICAL: 1.6}
+    extra_rules:
+      - id: current
+        variable: current_speed
+        label: "Surface current"
+        comparator: ">="
+        unit: km/h
+        bands: {MODERATE: 2.0, HIGH: 3.5, CRITICAL: 5.0}
+        weight: 18
+
+  cargo_transit:
+    label: "Cargo / vessel transit"
+    inherit: fishing_small_boat
+    overrides:
+      wave_height: {MODERATE: 3.0, HIGH: 4.5, CRITICAL: 6.5}
+      wind_speed: {MODERATE: 40, HIGH: 55, CRITICAL: 75}
+      wind_gust: {MODERATE: 55, HIGH: 75, CRITICAL: 100}
+      swell: {MODERATE: 3.0, HIGH: 4.0, CRITICAL: 5.5}
+      visibility: {MODERATE: 3000, HIGH: 1500, CRITICAL: 700}
+
+  patrol:
+    label: "Patrol / search and rescue"
+    inherit: fishing_mechanised
+
+  tourism:
+    label: "Coastal tourism / passenger boat"
+    inherit: fishing_small_boat
+    overrides:
+      wave_height: {MODERATE: 1.0, HIGH: 1.8, CRITICAL: 2.5}
+      wind_speed: {MODERATE: 18, HIGH: 30, CRITICAL: 45}
+
+  diving:
+    label: "Diving / snorkelling"
+    inherit: swimming
+
+  research:
+    label: "Research operations"
+    inherit: fishing_mechanised
+
+  generic:
+    label: "General marine activity"
+    inherit: fishing_small_boat
+
+# Warnings from an authority are not re-scored: an issued warning is a fact and
+# it sets a floor on the risk band.
+advisory_floors:
+  severe: CRITICAL
+  warning: HIGH
+  advisory: MODERATE
+  watch: MODERATE
+  none: LOW
+
+# Confidence model
+confidence:
+  base: 0.92
+  penalty_per_missing_required: 0.30
+  penalty_per_missing_optional: 0.06
+  penalty_stale_source: 0.18
+  penalty_aging_source: 0.06
+  penalty_unavailable_source: 0.12
+  penalty_demo_mode: 0.0        # demo data is labelled, not discounted
+  min_confidence_for_advisory: 0.35
+
+# Escalation: several moderate factors together are worse than one alone.
+escalation:
+  moderate_count_for_high: 3
+  high_count_for_critical: 3

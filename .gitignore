@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+bench-results/
+.DS_Store
+backend/app/data/providers/imd_fields.json
+backend/app/data/providers/incois_datasets.json

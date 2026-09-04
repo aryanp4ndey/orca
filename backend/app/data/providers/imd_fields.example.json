@@ -1,0 +1,23 @@
+{
+  "_comment": "EXAMPLE SHAPE ONLY - field names below are placeholders and have NOT been verified against the live IMD API. Copy to imd_fields.json and replace every 'field' value with the real key you observe from a whitelisted host.",
+  "current_wx": {
+    "rows_key": "data",
+    "issued_field": "REPLACE_WITH_REAL_KEY",
+    "valid_field": "REPLACE_WITH_REAL_KEY",
+    "params": {},
+    "variables": {
+      "wind_speed_10m": {"field": "REPLACE_WITH_REAL_KEY", "unit": "kn", "kind": "OBSERVED"},
+      "temperature_2m": {"field": "REPLACE_WITH_REAL_KEY", "unit": "degC", "kind": "OBSERVED"}
+    },
+    "advisories": []
+  },
+  "port_warning": {
+    "rows_key": "data",
+    "issued_field": "REPLACE_WITH_REAL_KEY",
+    "params": {},
+    "variables": {},
+    "advisories": [
+      {"field": "REPLACE_WITH_REAL_KEY", "category": "port_warning", "severity_field": "REPLACE_WITH_REAL_KEY"}
+    ]
+  }
+}

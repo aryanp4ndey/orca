@@ -1,0 +1,178 @@
+[
+  {
+    "mode": "local_serial",
+    "description": "serialised provider calls, no cache, zero-latency sources",
+    "iterations": 30,
+    "p50_ms": 5.65,
+    "p90_ms": 6.28,
+    "p95_ms": 6.3,
+    "p99_ms": 17.96,
+    "mean_ms": 6.15,
+    "min_ms": 5.44,
+    "max_ms": 17.96,
+    "provider_p50_ms": 1.35,
+    "parallel_saving_p50_ms": 0.0,
+    "payload_bytes_p50": 34755,
+    "payload_bytes_lowbw_p50": 25459,
+    "cache_hit_rate": 0.308,
+    "failures": 0,
+    "risk_levels": {
+      "HIGH": 30
+    },
+    "notes": ""
+  },
+  {
+    "mode": "local_parallel",
+    "description": "fan-out, no cache, zero-latency sources",
+    "iterations": 30,
+    "p50_ms": 5.29,
+    "p90_ms": 5.57,
+    "p95_ms": 5.62,
+    "p99_ms": 6.43,
+    "mean_ms": 5.35,
+    "min_ms": 5.09,
+    "max_ms": 6.43,
+    "provider_p50_ms": 1.38,
+    "parallel_saving_p50_ms": 5.69,
+    "payload_bytes_p50": 34760,
+    "payload_bytes_lowbw_p50": 25460,
+    "cache_hit_rate": 0.031,
+    "failures": 0,
+    "risk_levels": {
+      "HIGH": 30
+    },
+    "notes": ""
+  },
+  {
+    "mode": "coastal_serial",
+    "description": "serialised with injected upstream latency {'IMD': 260, 'INCOIS': 320, 'MOSDAC': 420} - the shape our earlier prototype had",
+    "iterations": 6,
+    "p50_ms": 1752.62,
+    "p90_ms": 1752.89,
+    "p95_ms": 1753.58,
+    "p99_ms": 1753.58,
+    "mean_ms": 1752.68,
+    "min_ms": 1752.13,
+    "max_ms": 1753.58,
+    "provider_p50_ms": 1746.14,
+    "parallel_saving_p50_ms": 0.0,
+    "payload_bytes_p50": 34788,
+    "payload_bytes_lowbw_p50": 25471,
+    "cache_hit_rate": 0.375,
+    "failures": 0,
+    "risk_levels": {
+      "HIGH": 6
+    },
+    "notes": ""
+  },
+  {
+    "mode": "coastal_parallel",
+    "description": "same latency, dependency-aware fan-out",
+    "iterations": 6,
+    "p50_ms": 426.1,
+    "p90_ms": 426.29,
+    "p95_ms": 427.4,
+    "p99_ms": 427.4,
+    "mean_ms": 426.29,
+    "min_ms": 425.84,
+    "max_ms": 427.4,
+    "provider_p50_ms": 421.96,
+    "parallel_saving_p50_ms": 1910.8,
+    "payload_bytes_p50": 34794,
+    "payload_bytes_lowbw_p50": 25472,
+    "cache_hit_rate": 0.125,
+    "failures": 0,
+    "risk_levels": {
+      "HIGH": 6
+    },
+    "notes": ""
+  },
+  {
+    "mode": "coastal_cached",
+    "description": "same latency, warm cache",
+    "iterations": 6,
+    "p50_ms": 4.92,
+    "p90_ms": 5.21,
+    "p95_ms": 5.43,
+    "p99_ms": 5.43,
+    "mean_ms": 5.02,
+    "min_ms": 4.75,
+    "max_ms": 5.43,
+    "provider_p50_ms": 0.38,
+    "parallel_saving_p50_ms": 0.0,
+    "payload_bytes_p50": 34739,
+    "payload_bytes_lowbw_p50": 25470,
+    "cache_hit_rate": 0.875,
+    "failures": 0,
+    "risk_levels": {
+      "HIGH": 6
+    },
+    "notes": ""
+  },
+  {
+    "mode": "fast_path",
+    "description": "an intent whose plan needs fewer agents",
+    "iterations": 30,
+    "p50_ms": 3.34,
+    "p90_ms": 3.59,
+    "p95_ms": 3.72,
+    "p99_ms": 4.61,
+    "mean_ms": 3.38,
+    "min_ms": 3.06,
+    "max_ms": 4.61,
+    "provider_p50_ms": 0.24,
+    "parallel_saving_p50_ms": 0.0,
+    "payload_bytes_p50": 14629,
+    "payload_bytes_lowbw_p50": 10783,
+    "cache_hit_rate": 0.969,
+    "failures": 0,
+    "risk_levels": {
+      "NONE": 30
+    },
+    "notes": ""
+  },
+  {
+    "mode": "degraded",
+    "description": "required source (INCOIS) unavailable",
+    "iterations": 30,
+    "p50_ms": 4.71,
+    "p90_ms": 5.39,
+    "p95_ms": 5.92,
+    "p99_ms": 5.97,
+    "mean_ms": 4.85,
+    "min_ms": 4.47,
+    "max_ms": 5.97,
+    "provider_p50_ms": 1.11,
+    "parallel_saving_p50_ms": 4.23,
+    "payload_bytes_p50": 26636,
+    "payload_bytes_lowbw_p50": 20128,
+    "cache_hit_rate": 0.018,
+    "failures": 0,
+    "risk_levels": {
+      "INSUFFICIENT_DATA": 30
+    },
+    "notes": ""
+  },
+  {
+    "mode": "slow_source",
+    "description": "MOSDAC injected at 1500 ms, provider budget 400 ms",
+    "iterations": 8,
+    "p50_ms": 5.92,
+    "p90_ms": 11.2,
+    "p95_ms": 405.79,
+    "p99_ms": 405.79,
+    "mean_ms": 56.22,
+    "min_ms": 4.83,
+    "max_ms": 405.79,
+    "provider_p50_ms": 1.31,
+    "parallel_saving_p50_ms": 3.1,
+    "payload_bytes_p50": 31720,
+    "payload_bytes_lowbw_p50": 23478,
+    "cache_hit_rate": 0.071,
+    "failures": 0,
+    "risk_levels": {
+      "HIGH": 8
+    },
+    "notes": ""
+  }
+]

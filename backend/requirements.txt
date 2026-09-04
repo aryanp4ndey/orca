@@ -1,0 +1,15 @@
+# ORCA backend runtime dependencies
+# Python 3.11+
+
+fastapi>=0.141.1          # pulls starlette and annotated-doc
+uvicorn[standard]>=0.30
+pydantic>=2.9
+pydantic-settings>=2.5
+httpx>=0.27               # async HTTP with connection pooling
+PyYAML>=6.0               # risk ruleset
+python-dateutil>=2.9
+
+# --- optional, feature-flagged ------------------------------------------
+# redis>=5.0              # ORCA_CACHE_BACKEND=redis
+# shapely>=2.0            # alternative GeoEngine backend (see docs/architecture.md)
+# pyproj>=3.6             # projected-CRS work, not needed by the default engine

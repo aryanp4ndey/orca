@@ -1,0 +1,34 @@
+# ORCA - one command to a working demo:
+#     docker compose up --build
+# then open http://localhost:8000/app/   <- the app
+#      (http://localhost:8000/docs is the API console, not the app)
+#
+# Redis is optional and off by default. ORCA runs fine on its in-process cache;
+# turn Redis on only if you want the cache to survive a restart or be shared
+# across replicas.
+
+services:
+  orca-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      ORCA_DEMO_MODE: "true"
+      ORCA_ENVIRONMENT: "demo"
+      ORCA_EXPOSE_TRACE_IN_RESPONSE: "true"
+      # ORCA_CACHE_BACKEND: "redis"
+      # ORCA_REDIS_URL: "redis://redis:6379/0"
+      # --- demo switches, uncomment to show failure behaviour ---
+      # ORCA_DEMO_SCENARIO: "rough"
+      # ORCA_DEMO_FAIL_SOURCES: "INCOIS"
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
+
+  # redis:
+  #   image: redis:7-alpine
+  #   ports: ["6379:6379"]
+  #   restart: unless-stopped
