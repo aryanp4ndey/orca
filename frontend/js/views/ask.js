@@ -6,7 +6,7 @@
  * thread. A fisherman never navigates anywhere to get an answer.
  */
 
-import { h, ICON, announce, toast } from '../util/dom.js';
+import { h, ICON, RISK_ICON, renderIcons, announce, toast } from '../util/dom.js';
 import { dateTimeIST, whenPhrase } from '../util/format.js';
 import { t, getLang } from '../i18n.js';
 import { state, mode, addTurn, update, resetConversation } from '../state.js';
@@ -82,6 +82,7 @@ export function askView(app) {
       }
     }
     thread.scrollTop = thread.scrollHeight;
+    requestAnimationFrame(renderIcons);
   }
 
   function renderAnswer(turn) {

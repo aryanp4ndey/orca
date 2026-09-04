@@ -400,9 +400,9 @@ i[data-lucide] { display: inline-block; vertical-align: middle; width: 1.2em; he
 .risk__context span { display: inline-flex; align-items: center; gap: 6px; }
 
 /* factor tiles */
-.factors { display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-           background: var(--border); border-top: 1px solid var(--border); }
-.factor { background: var(--surface); padding: var(--sp-3) var(--sp-4);
+.factors { display: flex; flex-wrap: wrap; gap: 1px;
+             background: var(--border); border-top: 1px solid var(--border); }
+.factor { flex: 1 1 140px; background: var(--surface); padding: var(--sp-3) var(--sp-4);
           display: flex; flex-direction: column; gap: 2px; }
 .factor__top { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-3); }
 .factor__value { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
@@ -585,7 +585,7 @@ i[data-lucide] { display: inline-block; vertical-align: middle; width: 1.2em; he
                   place-items: center; padding: 0 4px; }
 
 /* -------------------------------------------------------------- sheets --- */
-.sheet { position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column;
+.sheet { position: fixed; inset: 0; z-index: 2000; display: flex; flex-direction: column;
          justify-content: flex-end; background: rgba(2, 8, 14, 0.66); }
 .sheet__panel {
   background: var(--bg); border-top-left-radius: var(--r-xl); border-top-right-radius: var(--r-xl);
@@ -679,7 +679,6 @@ i[data-lucide] { display: inline-block; vertical-align: middle; width: 1.2em; he
   .navitem[aria-current="page"] { background: var(--accent-glow); }
   .hero__title { font-size: 46px; }
   .quickgrid { grid-template-columns: repeat(4, 1fr); }
-  .factors { grid-template-columns: repeat(4, 1fr); }
   .main { padding: var(--sp-6) var(--sp-6) var(--sp-8); }
   .sheet { justify-content: center; align-items: center; padding: var(--sp-6); }
   .sheet__panel { border-radius: var(--r-xl); max-width: 720px; width: 100%; border-bottom: 1px solid var(--border); }

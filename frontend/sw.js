@@ -11,7 +11,7 @@
  * the time they were retrieved and labelled as saved.
  */
 
-const VERSION = 'orca-shell-v3';
+const VERSION = 'orca-shell-v4';
 const SHELL = [
   '/app/',
   '/app/index.html',
